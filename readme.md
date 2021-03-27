@@ -1,7 +1,7 @@
 # Личный проект «Типотека» [![Build status][travis-image]][travis-url]
 
 * Студент: [Неопознанный енот](https://up.htmlacademy.ru/nodejs/3/user/1003211).
-* Наставник: `Неизвестно`.
+* Наставник: [Сергей Вохмянин](https://htmlacademy.ru/profile/id530823).
 
 ---
 
@@ -51,5 +51,3 @@ git clone SSH-адрес_вашего_форка
 [travis-image]: https://travis-ci.com/htmlacademy-nodejs/1003211-typoteka-3.svg?branch=master
 [travis-url]: https://travis-ci.com/htmlacademy-nodejs/1003211-typoteka-3
 
-
-#### Сергей Вохмянин
