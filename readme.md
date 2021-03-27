@@ -50,3 +50,4 @@ git clone SSH-адрес_вашего_форка
 
 [travis-image]: https://travis-ci.com/htmlacademy-nodejs/1003211-typoteka-3.svg?branch=master
 [travis-url]: https://travis-ci.com/htmlacademy-nodejs/1003211-typoteka-3
+
