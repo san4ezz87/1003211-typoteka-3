@@ -124,6 +124,5 @@ module.exports = {
 
     const content = JSON.stringify(generateOffers(countChecked), null, 2);
     writeFile(content);
-
   }
 };
