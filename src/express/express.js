@@ -2,7 +2,7 @@
 
 const express = require(`express`);
 const app = express();
-const APPLICATION_PORT = 8080;
+const APPLICATION_PORT = process.env.PORT || 8080;
 
 const mainRoutes = require(`./routes/mainRoutes`);
 const myRoutes = require(`./routes/myRoutes`);
