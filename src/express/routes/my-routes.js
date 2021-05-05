@@ -4,13 +4,11 @@ const {Router} = require(`express`);
 const router = new Router();
 
 router.get(`/`, (req, res) => {
-  res.setHeader(`content-type`, `text/plain`);
-  res.send(req.originalUrl);
+  res.render(`my`);
 });
 
 router.get(`/comments`, (req, res) => {
-  res.setHeader(`content-type`, `text/plain`);
-  res.send(req.originalUrl);
+  res.render(`comments`);
 });
 
 module.exports = router;
