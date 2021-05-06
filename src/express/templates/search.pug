@@ -1,0 +1,20 @@
+extends layout.pug
+
+block content 
+  .wrapper-color
+    include ./common/headers/header-author.pug
+    main
+      section.search-page
+        .search-page__wrapper
+          h1 Поиск
+          .search.search-page__form
+            form(action='#' method='get')
+              label
+                input(type='text' name='search' placeholder='Что ищем?')
+              button.search__button.button.button--transparent(type='submit') Найти
+            if false
+              include ./search/search-result.pug
+            if true  
+              include ./search/search-empty.pug
+
+    include ./common/footer.pug
