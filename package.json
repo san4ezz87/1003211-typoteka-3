@@ -4,7 +4,7 @@
   "description": "Типотека",
   "main": "./src/service/service.js",
   "scripts": {
-    "start": "nodemon ./src/service/service.js",
+    "start": "node ./src/service/service.js",
     "start-front-server": "PORT=8080 nodemon ./src/express/express.js",
     "test": "npm run eslint",
     "eslint": "eslint --ext .js src/"
@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "express": "4.17.1",
+    "nanoid": "3.1.23",
     "pug": "2.0.4"
   }
 }
