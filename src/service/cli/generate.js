@@ -6,8 +6,7 @@ const chalk = require(`chalk`);
 const {getRandomNumber, shuffle} = require(`../../utils`);
 
 const {nanoid} = require(`nanoid`);
-
-const MAX_ID_LENGTH = 6;
+const {MAX_ID_LENGTH} = require(`../constants`);
 
 const TITLLES_URL = `./data/titles.txt`;
 const ANNOUNCE_URL = `./data/sentences.txt`;
@@ -76,7 +75,7 @@ const generateOffers = (count, titles, announces, cantegory, comments) => {
         createdDate: dateFormated,
         announce: shuffle(announces).slice(0, 4).join(` `),
         fullText: shuffle(announces).slice(0, getRandomNumber(4, 23)).join(` `),
-        catefory: shuffle(cantegory).slice(
+        category: shuffle(cantegory).slice(
             0,
             getRandomNumber(0, cantegory.length - 1)
         ),
