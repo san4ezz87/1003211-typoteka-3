@@ -1,0 +1,6 @@
+POST http://localhost:3000/api/articles/03M7fE/comments HTTP/1.1
+content-type: application/json
+
+{
+  "text": "новый коментарий"
+}

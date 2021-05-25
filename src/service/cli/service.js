@@ -2,28 +2,17 @@
 
 const express = require(`express`);
 const app = express();
+const routes = require(`../api`);
 
-
-const fs = require(`fs`).promises;
-const path = require(`path`);
-const {HttpCode} = require(`../../utils/httpCodes`);
-
-const DEFAULT_PORT = 3000;
-const FILENAME = `mocks.json`;
-
-const preparePath = (url) => path.resolve(__dirname, `../../../`, url);
+const {
+  API_PREFIX,
+  DEFAULT_PORT,
+  HttpCode,
+} = require(`../constants`);
 
 app.use(express.json());
 
-app.get(`/posts`, async (req, res) => {
-  try {
-    const fileContent = await fs.readFile(preparePath(FILENAME));
-    const mocks = JSON.parse(fileContent);
-    res.json(mocks);
-  } catch (err) {
-    res.json([]);
-  }
-});
+app.use(API_PREFIX, routes);
 
 app.use((req, res) => {
   res.status(HttpCode.NOT_FOUND).end(`404`);
@@ -42,7 +31,7 @@ module.exports = {
     const port = Number.parseInt(customPort, 10) || DEFAULT_PORT;
 
     app.listen(port, () => {
-      console.log(`Example app listening at http://localhost:${port}`)
+      console.log(`Example app listening at http://localhost:${port}`);
     });
   }
 };
