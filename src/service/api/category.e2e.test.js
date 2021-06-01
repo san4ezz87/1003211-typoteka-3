@@ -231,6 +231,6 @@ describe(`API returns category list`, () => {
   test(`Returns list of 11 categories`, () => expect(response.body.length).toBe(11));
   test(`Category names are in list`,
       () => {
-        expect.arrayContaining([`Деревья`, `За жизнь`, `Без рамки`, `Разное`, `IT`, `Музыка`, `Кино`, `Программирование`, `Железо`, `Домино`, `Гастроном`, `Вкусно`,])
+        expect.arrayContaining([`Деревья`, `За жизнь`, `Без рамки`, `Разное`, `IT`, `Музыка`, `Кино`, `Программирование`, `Железо`, `Домино`, `Гастроном`, `Вкусно`]);
       });
 });

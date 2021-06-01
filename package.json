@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon ./src/service/service.js",
     "start-front-server": "PORT=8080 nodemon ./src/express/express.js",
-    "test": "npm run jest",
+    "test": "npm run eslint && npm run jest",
     "jest": "jest",
     "eslint": "eslint --ext .js src/"
   },
