@@ -15,5 +15,5 @@ module.exports = (req, res, next) => {
     res.status(HttpCode.BAD_REQUEST).send(`Bad request`);
     return null;
   }
-  next();
+  return next();
 };

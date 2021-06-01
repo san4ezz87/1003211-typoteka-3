@@ -24,7 +24,7 @@ const app = new Router();
     category(app, new CategoriesService(mockData));
     search(app, new SearchService(mockData));
   } catch (err) {
-    console.log('err in get data', err);
+    console.log(`err in get data', err`);
   }
 
 })();

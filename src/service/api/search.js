@@ -11,6 +11,11 @@ module.exports = (app, articleService) => {
   route.get(`/`, (req, res) => {
     const query = req.query.query;
 
+    if (!query) {
+      res.status(HttpCode.BAD_REQUEST).send(`Bad request`);
+      return;
+    }
+
     const articles = articleService.search(query);
 
     if (!articles) {

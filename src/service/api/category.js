@@ -13,4 +13,4 @@ module.exports = (app, articleService) => {
 
     res.status(HttpCode.OK).json(categories);
   });
-}
+};

@@ -9,10 +9,10 @@ const {
   articleCommentValidator
 } = require(`../middlewares`);
 
-const route = new Router();
-
 
 module.exports = (app, articleService) => {
+  const route = new Router();
+
   app.use(`/articles`, route);
 
   route.get(`/`, (req, res) => {
@@ -30,7 +30,7 @@ module.exports = (app, articleService) => {
     res.status(HttpCode.CREATED).json(article);
   });
 
-  route.put(`/:articleId`, articleValidator, (req, res) => {
+  route.put(`/:articleId`, articleExist(articleService), articleValidator, (req, res) => {
     const id = req.params.articleId;
     const article = articleService.update(id, req.body);
 
@@ -39,8 +39,8 @@ module.exports = (app, articleService) => {
 
   route.delete(`/:articleId`, articleExist(articleService), (req, res) => {
     const {article} = res.locals;
-    articleService.drop(article);
-    res.status(HttpCode.DELETED).send(``);
+    const articleDeleted = articleService.drop(article);
+    res.status(HttpCode.OK).send(articleDeleted);
   });
 
   route.get(`/:articleId/comments`, articleExist(articleService), (req, res) => {
@@ -54,7 +54,7 @@ module.exports = (app, articleService) => {
 
     articleService.dropComment(article, comment);
 
-    res.status(HttpCode.DELETED).send(``);
+    res.status(HttpCode.OK).send(comment);
   });
 
   route.post(`/:articleId/comments`, [articleExist(articleService), articleCommentValidator], (req, res) => {
