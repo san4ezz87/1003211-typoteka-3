@@ -7,6 +7,10 @@ const articles = require(`./articles`);
 const category = require(`./category`);
 const search = require(`./search`);
 
+const {getLogger} = require(`../lib/logger`);
+
+const logger = getLogger({name: `api`});
+
 const {
   ArticlesService,
   CategoriesService,
@@ -24,7 +28,7 @@ const app = new Router();
     category(app, new CategoriesService(mockData));
     search(app, new SearchService(mockData));
   } catch (err) {
-    console.log(`err in get data', err`);
+    logger.error(`Couldn't init services or read data ${err.message}`);
   }
 
 })();

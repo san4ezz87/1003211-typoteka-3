@@ -2,11 +2,14 @@
 
 const fs = require(`fs`).promises;
 const path = require(`path`);
-const chalk = require(`chalk`);
 const {getRandomNumber, shuffle} = require(`../../utils`);
 
 const {nanoid} = require(`nanoid`);
 const {MAX_ID_LENGTH} = require(`../constants`);
+
+const {getLogger} = require(`../lib/logger`);
+
+const logger = getLogger({name: `generator`});
 
 const TITLLES_URL = `./data/titles.txt`;
 const ANNOUNCE_URL = `./data/sentences.txt`;
@@ -19,7 +22,7 @@ const getStaticFromFile = async (url) => {
     const data = await fs.readFile(url, `utf8`);
     return data.split(`\n`);
   } catch (e) {
-    console.log(chalk.red(`Не удалось прочитать файл`));
+    logger.error(`Не удалось прочитать файл ${url}`);
     return [];
   }
 };
@@ -93,10 +96,11 @@ const writeFile = async (content) => {
   try {
     await fs.writeFile(`mocks.json`, content);
   } catch (e) {
-    console.log(chalk.red(`Не удалось записать файл!`));
+    logger.error(`Не удалось записать файл mocks.json!`);
     return process.exit(1);
   }
-  console.log(chalk.green(`Файл успешно записан!`));
+
+  logger.info(`Файл mocks.json успешно записан!`);
   return process.exit(0);
 };
 
@@ -106,7 +110,7 @@ module.exports = {
     const countChecked = Number.parseInt(count, 10) || COUNT_DEFAULT;
 
     if (countChecked > MAX_ELEMENTS) {
-      console.log(`Не больше 1000 объявлений`);
+      logger.error(`Не больше 1000 объявлений`);
       return;
     }
 
