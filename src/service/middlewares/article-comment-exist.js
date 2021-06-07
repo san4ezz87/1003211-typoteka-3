@@ -15,5 +15,5 @@ module.exports = (req, res, next) => {
 
   res.locals.comment = comment;
 
-  next();
+  return next();
 };

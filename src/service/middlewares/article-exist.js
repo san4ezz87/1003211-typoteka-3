@@ -13,5 +13,5 @@ module.exports = (articleService) => (req, res, next) => {
 
   res.locals.article = article;
 
-  next();
+  return next();
 };

@@ -29,8 +29,10 @@ class ArticlesService {
   }
 
   drop(article) {
-
-    this._articles = this._articles.filter((item) => item.id !== article.id);
+    this._articles = this._articles.filter((item) => {
+      return item.id !== article.id;
+    });
+    return article;
   }
 
   dropComment(article, comment) {

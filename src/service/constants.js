@@ -16,10 +16,16 @@ const HttpCode = {
 const DEFAULT_PORT = 3000;
 const MAX_ID_LENGTH = 6;
 
+const Env = {
+  DEVELOPMENT: `development`,
+  PRODUCTION: `production`,
+};
+
 module.exports = {
   API_PREFIX,
   DEFAULT_PORT,
   MAX_ID_LENGTH,
-  HttpCode
+  HttpCode,
+  Env,
 };
 
