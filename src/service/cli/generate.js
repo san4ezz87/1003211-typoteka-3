@@ -15,6 +15,7 @@ const TITLLES_URL = `./data/titles.txt`;
 const ANNOUNCE_URL = `./data/sentences.txt`;
 const CATEGORY_URL = `./data/categories.txt`;
 const COMMENTS_URL = `./data/comments.txt`;
+const IMG_URL = `./data/img.txt`;
 
 const preparePath = (url) => path.resolve(__dirname, `../../../`, url);
 const getStaticFromFile = async (url) => {
@@ -64,13 +65,23 @@ const formatDate = (date) => {
   }-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
 };
 
-const generateOffers = (count, titles, announces, cantegory, comments) => {
+const srcsetList = [`@1x.jpg`, `@2x.jpg 2x`];
+
+const buildSrcset = (picturName) => {
+  return srcsetList.map((pictureSize) => {
+    return `img/${picturName}${pictureSize}`;
+  });
+};
+
+const generateOffers = (count, titles, announces, cantegory, comments, images) => {
   return Array(count)
     .fill({})
-    .map(() => {
+    .map((_, index) => {
       const date = generateDate();
       const dateFormated = formatDate(date);
       const id = nanoid(MAX_ID_LENGTH);
+
+      const srcSet = index % 4 ? buildSrcset(shuffle(images).slice(0, 1)) : [];
 
       return {
         id,
@@ -80,14 +91,19 @@ const generateOffers = (count, titles, announces, cantegory, comments) => {
         fullText: shuffle(announces).slice(0, getRandomNumber(4, 23)).join(` `),
         category: shuffle(cantegory).slice(
             0,
-            getRandomNumber(0, cantegory.length - 1)
+            getRandomNumber(1, 4)
         ),
         comments: Array(getRandomNumber(0, 10)).fill({}).map(() => {
           return {
             id: nanoid(MAX_ID_LENGTH),
-            text: shuffle(comments).slice(1, getRandomNumber(0, comments.length - 1)).join(``)
+            text: shuffle(comments).slice(1, getRandomNumber(2, comments.length - 1)).join(``)
           };
-        })
+        }),
+        img: {
+          srcSet: srcSet.join(`, `),
+          src: srcSet[0] || ``,
+          alt: srcSet[0]
+        }
       };
     });
 };
@@ -118,8 +134,9 @@ module.exports = {
     const announces = await getStaticFromFile(preparePath(ANNOUNCE_URL));
     const cantegory = await getStaticFromFile(preparePath(CATEGORY_URL));
     const comments = await getStaticFromFile(preparePath(COMMENTS_URL));
+    const imges = await getStaticFromFile(preparePath(IMG_URL));
 
-    const content = JSON.stringify(generateOffers(countChecked, titles, announces, cantegory, comments), null, 2);
+    const content = JSON.stringify(generateOffers(countChecked, titles, announces, cantegory, comments, imges), null, 2);
     writeFile(content);
   },
 };

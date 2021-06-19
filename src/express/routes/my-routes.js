@@ -2,13 +2,17 @@
 
 const {Router} = require(`express`);
 const router = new Router();
+const {getAPI} = require(`../api.js`);
+const api = getAPI();
 
-router.get(`/`, (req, res) => {
-  res.render(`my`);
+router.get(`/`, async (req, res) => {
+  const articles = await api.getArticles();
+  res.render(`my`, {articles});
 });
 
-router.get(`/comments`, (req, res) => {
-  res.render(`comments`);
+router.get(`/comments`, async (req, res) => {
+  const articles = await api.getArticles();
+  res.render(`comments`, {articles: articles.slice(0, 3)});
 });
 
 module.exports = router;
