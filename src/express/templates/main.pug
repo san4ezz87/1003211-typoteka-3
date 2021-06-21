@@ -8,8 +8,8 @@ block content
       p.
         
         Это приветственный текст, который владелец блога может выбрать, чтобы описать себя 👏
-      if true
-        include ./main/main-page-empty.pug
       if false
-        include ./main/main-page-theme-list.pug  
+        include ./main/main-page-empty
+      if true
+        include ./main/main-page-theme-list
     include ./common/footer.pug
