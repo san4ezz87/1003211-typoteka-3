@@ -8,13 +8,13 @@ block content
         .search-page__wrapper
           h1 Поиск
           .search.search-page__form
-            form(action='#' method='get')
+            form(action='search' method='get')
               label
                 input(type='text' name='search' placeholder='Что ищем?')
               button.search__button.button.button--transparent(type='submit') Найти
-            if false
+            if searcedArticles
               include ./search/search-result.pug
-            if true  
+            if !searcedArticles  
               include ./search/search-empty.pug
 
     include ./common/footer.pug

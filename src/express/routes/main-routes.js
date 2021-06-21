@@ -19,8 +19,16 @@ router.get(`/login`, (req, res) => {
   res.render(`login`);
 });
 
-router.get(`/search`, (req, res) => {
-  res.render(`search`);
+router.get(`/search`, async (req, res) => {
+  console.log('query search', req.query.search)
+  try {
+    const searcedArticles = await api.search(req.query.search)
+    res.render(`search`, {searcedArticles})
+    
+  } catch(err) {
+    res.render(`search`, {searcedArticles: null})
+  }
+
 });
 
 router.get(`/categories`, (req, res) => {
