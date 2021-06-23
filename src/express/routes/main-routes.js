@@ -20,13 +20,11 @@ router.get(`/login`, (req, res) => {
 });
 
 router.get(`/search`, async (req, res) => {
-  console.log('query search', req.query.search)
   try {
-    const searcedArticles = await api.search(req.query.search)
-    res.render(`search`, {searcedArticles})
-    
-  } catch(err) {
-    res.render(`search`, {searcedArticles: null})
+    const searcedArticles = await api.search(req.query.search);
+    res.render(`search`, {searcedArticles});
+  } catch (err) {
+    res.render(`search`, {searcedArticles: null});
   }
 
 });

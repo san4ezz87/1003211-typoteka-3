@@ -28,7 +28,7 @@ class API {
     return this._load(`/articles/${id}`);
   }
 
-  search(query) {
+  async search(query) {
     return this._load(`/search`, {params: {query}});
   }
 

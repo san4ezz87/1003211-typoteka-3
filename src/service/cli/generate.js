@@ -134,9 +134,9 @@ module.exports = {
     const announces = await getStaticFromFile(preparePath(ANNOUNCE_URL));
     const cantegory = await getStaticFromFile(preparePath(CATEGORY_URL));
     const comments = await getStaticFromFile(preparePath(COMMENTS_URL));
-    const imges = await getStaticFromFile(preparePath(IMG_URL));
+    const images = await getStaticFromFile(preparePath(IMG_URL));
 
-    const content = JSON.stringify(generateOffers(countChecked, titles, announces, cantegory, comments, imges), null, 2);
+    const content = JSON.stringify(generateOffers(countChecked, titles, announces, cantegory, comments, images), null, 2);
     writeFile(content);
   },
 };
