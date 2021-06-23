@@ -6,6 +6,7 @@ const app = express();
 
 const requestResponseLogger = require(`../common/middlewares/request-response-logger`);
 
+
 const APPLICATION_PORT = process.env.PORT || 8080;
 
 const PUBLIC_DIR = `/public`;
@@ -33,12 +34,14 @@ app.use(express.static(path.resolve(__dirname + UPLOAD_DIR)));
 
 app.use(requestResponseLogger(logger));
 
+
 app.use(`/`, mainRoutes);
 app.use(`/my`, myRoutes);
 app.use(`/articles`, articlesRouters);
 
 app.use(handleClientError(logger));
 app.use(handleServerError(logger));
+
 
 app.listen(APPLICATION_PORT, () => {
   console.log(`Example app listening at http://localhost:${APPLICATION_PORT}`);

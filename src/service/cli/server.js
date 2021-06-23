@@ -23,12 +23,14 @@ app.use(express.json());
 
 app.use(requestResponseLogger(logger));
 
+
 app.use(API_PREFIX, routes);
 
 
 app.use(handleServerError);
 
 app.use(handleClientError);
+
 
 module.exports = {
   name: `--server`,

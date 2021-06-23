@@ -25,6 +25,7 @@ router.get(`/search`, async (req, res) => {
     res.render(`search`, {searcedArticles});
   } catch (err) {
     res.render(`search`, {searcedArticles: null});
+
   }
 
 });

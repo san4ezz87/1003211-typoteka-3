@@ -137,6 +137,7 @@ module.exports = {
     const images = await getStaticFromFile(preparePath(IMG_URL));
 
     const content = JSON.stringify(generateOffers(countChecked, titles, announces, cantegory, comments, images), null, 2);
+
     writeFile(content);
   },
 };

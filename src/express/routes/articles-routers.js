@@ -6,6 +6,7 @@ const multer = require(`multer`);
 
 const {storage} = require(`../middlewares`);
 
+
 const {getAPI} = require(`../api.js`);
 const api = getAPI();
 
@@ -40,6 +41,7 @@ router.post(`/add`,
         res.render(`admin-add-new-post`, {article, categories: []});
       }
     });
+
 
 router.get(`/edit/:id`, async (req, res) => {
   const {id} = req.params;
