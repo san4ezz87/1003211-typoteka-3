@@ -1,6 +1,6 @@
 # Личный проект «Типотека» [![Build status][travis-image]][travis-url]
 
-* Студент: [Неопознанный енот](https://up.htmlacademy.ru/nodejs/3/user/1003211).
+* Студент: [Александр Смирнов](https://up.htmlacademy.ru/nodejs/3/user/1003211).
 * Наставник: [Сергей Вохмянин](https://htmlacademy.ru/profile/id530823).
 
 ---
