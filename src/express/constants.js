@@ -19,4 +19,5 @@ const Env = {
 module.exports = {
   HttpCode,
   Env
-}
+};
+

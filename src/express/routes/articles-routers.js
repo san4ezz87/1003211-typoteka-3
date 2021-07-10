@@ -4,7 +4,8 @@ const {Router} = require(`express`);
 const router = new Router();
 const multer = require(`multer`);
 
-const {storage} = require(`../middlewares/img-storage`);
+const {storage} = require(`../middlewares`);
+
 
 const {getAPI} = require(`../api.js`);
 const api = getAPI();
@@ -20,26 +21,27 @@ router.get(`/add`, (req, res) => {
 const upload = multer({storage});
 
 router.post(`/add`,
-  upload.single(`upload`),
-  async (req, res) => {
+    upload.single(`upload`),
+    async (req, res) => {
 
-  const {body, file} = req;
-  const article = {
-    title: body.title,
-    announce: body.announce,
-    fullText: body.fullText,
-    category: Array.isArray(body.category) ? body.category : [body.category],
-    img: {
-      src: file.filename
-    }
-  };
-  try {
-    await api.createArticle(article);
-    res.redirect(`/my`);
-  } catch (err) {
-    res.render(`admin-add-new-post`, {article, categories: []});
-  }
-});
+      const {body, file} = req;
+      const article = {
+        title: body.title,
+        announce: body.announce,
+        fullText: body.fullText,
+        category: Array.isArray(body.category) ? body.category : [body.category],
+        img: {
+          src: file.filename
+        }
+      };
+      try {
+        await api.createArticle(article);
+        res.redirect(`/my`);
+      } catch (err) {
+        res.render(`admin-add-new-post`, {article, categories: []});
+      }
+    });
+
 
 router.get(`/edit/:id`, async (req, res) => {
   const {id} = req.params;
@@ -52,6 +54,7 @@ router.get(`/edit/:id`, async (req, res) => {
       res.render(`errors/404`);
       return [];
     }
+
     res.render(`errors/500`);
     return [];
   });

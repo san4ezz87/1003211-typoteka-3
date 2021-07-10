@@ -5,42 +5,31 @@ const app = express();
 const routes = require(`../api`);
 const {getLogger} = require(`../lib/logger`);
 
+const requestResponseLogger = require(`../../common/middlewares/request-response-logger`);
+
 const logger = getLogger({name: `api`});
 
 const {
   API_PREFIX,
   DEFAULT_PORT,
-  HttpCode,
 } = require(`../constants`);
+
+const {
+  handleServerError,
+  handleClientError
+} = require(`../middlewares`);
 
 app.use(express.json());
 
-app.use((req, res, next) => {
-  logger.debug(`Request on route ${req.url}`);
+app.use(requestResponseLogger(logger));
 
-  res.on(`finish`, () => {
-    logger.info(`Response status code ${res.statusCode}`);
-  });
-
-  next();
-});
 
 app.use(API_PREFIX, routes);
 
 
-app.use((req, res) => {
-  res.status(HttpCode.NOT_FOUND).end(`404`);
-  logger.error(`Route not found: ${req.url}`);
-});
+app.use(handleServerError);
 
-app.use((err, req, res, next) => {
-  if (err) {
-    res.status(HttpCode.INTERNAL_SERVER_ERROR).end(`500`);
-    logger.error(`An error occured on processing request: ${err.message}`);
-  }
-  next();
-});
-
+app.use(handleClientError);
 
 
 module.exports = {
