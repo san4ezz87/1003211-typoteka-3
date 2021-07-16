@@ -1,27 +1,3 @@
--- DROP DATABASE IF EXISTS typoteka;
-
--- CREATE DATABASE typoteka
---   WITH
---   OWNER = postgres
---   ENCODING = 'UTF-8'
---   LC_COLLATE = 'C'
---   LC_CTYPE = 'C'
---   TABLESPACE = pg_default
---   TEMPLATE = template0
---   CONNECTION LIMIT = -1;
-
--- SELECT
---     tablename,
---     indexname,
---     indexdef
--- FROM
---     pg_indexes
--- WHERE
---     schemaname = 'public'
--- ORDER BY
---     tablename,
---     indexname;
-
 DROP TABLE IF EXISTS categories;
 
 CREATE TABLE categories(
