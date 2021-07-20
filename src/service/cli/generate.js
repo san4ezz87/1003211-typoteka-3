@@ -1,8 +1,14 @@
 "use strict";
 
-const fs = require(`fs`).promises;
 const path = require(`path`);
-const {getRandomNumber, shuffle} = require(`../../utils`);
+const {
+  getRandomNumber,
+  shuffle,
+  generateDate,
+  formatDate,
+  getStaticFromFile,
+  writeFile,
+} = require(`../../utils`);
 
 const {nanoid} = require(`nanoid`);
 const {MAX_ID_LENGTH} = require(`../constants`);
@@ -18,52 +24,9 @@ const COMMENTS_URL = `./data/comments.txt`;
 const IMG_URL = `./data/img.txt`;
 
 const preparePath = (url) => path.resolve(__dirname, `../../../`, url);
-const getStaticFromFile = async (url) => {
-  try {
-    const data = await fs.readFile(url, `utf8`);
-    return data.split(`\n`);
-  } catch (e) {
-    logger.error(`Не удалось прочитать файл ${url}`);
-    return [];
-  }
-};
 
 const COUNT_DEFAULT = 1;
 const MAX_ELEMENTS = 1000;
-const MONTHS_IN_YEAR = 12;
-
-const daysInMonth = (month, year) => {
-  return new Date(year, month, 0).getDate();
-};
-
-const generateMonth = (now) => {
-  const passedMonth = getRandomNumber(0, 3);
-  const currentMonth = now.getMonth();
-
-  return passedMonth > currentMonth
-    ? MONTHS_IN_YEAR + currentMonth - passedMonth
-    : currentMonth - passedMonth;
-};
-
-const generateDate = () => {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = generateMonth(now);
-  const day =
-    now.getMonth() === month
-      ? getRandomNumber(1, now.getDate())
-      : getRandomNumber(1, daysInMonth(year, month));
-  const hours = getRandomNumber(1, 23);
-  const minutes = getRandomNumber(1, 59);
-  const seconds = getRandomNumber(1, 59);
-  return new Date(year, month, day, hours, minutes, seconds);
-};
-
-const formatDate = (date) => {
-  return `${date.getFullYear()}-${
-    date.getMonth() + 1
-  }-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
-};
 
 const srcsetList = [`@1x.jpg`, `@2x.jpg 2x`];
 
@@ -73,7 +36,7 @@ const buildSrcset = (picturName) => {
   });
 };
 
-const generateOffers = (count, titles, announces, cantegory, comments, images) => {
+const generateArticless = (count, titles, announces, cantegory, comments, images) => {
   return Array(count)
     .fill({})
     .map((_, index) => {
@@ -108,17 +71,6 @@ const generateOffers = (count, titles, announces, cantegory, comments, images) =
     });
 };
 
-const writeFile = async (content) => {
-  try {
-    await fs.writeFile(`mocks.json`, content);
-  } catch (e) {
-    logger.error(`Не удалось записать файл mocks.json!`);
-    return process.exit(1);
-  }
-
-  logger.info(`Файл mocks.json успешно записан!`);
-  return process.exit(0);
-};
 
 module.exports = {
   name: `--generate`,
@@ -130,14 +82,13 @@ module.exports = {
       return;
     }
 
-    const titles = await getStaticFromFile(preparePath(TITLLES_URL));
-    const announces = await getStaticFromFile(preparePath(ANNOUNCE_URL));
-    const cantegory = await getStaticFromFile(preparePath(CATEGORY_URL));
-    const comments = await getStaticFromFile(preparePath(COMMENTS_URL));
-    const images = await getStaticFromFile(preparePath(IMG_URL));
+    const titles = await getStaticFromFile(preparePath(TITLLES_URL), logger);
+    const announces = await getStaticFromFile(preparePath(ANNOUNCE_URL), logger);
+    const cantegory = await getStaticFromFile(preparePath(CATEGORY_URL), logger);
+    const comments = await getStaticFromFile(preparePath(COMMENTS_URL), logger);
+    const images = await getStaticFromFile(preparePath(IMG_URL), logger);
 
-    const content = JSON.stringify(generateOffers(countChecked, titles, announces, cantegory, comments, images), null, 2);
-
-    writeFile(content);
+    const content = JSON.stringify(generateArticless(countChecked, titles, announces, cantegory, comments, images), null, 2);
+    writeFile(`mocks.json`, content, logger);
   },
 };
