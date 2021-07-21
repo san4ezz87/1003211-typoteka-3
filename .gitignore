@@ -17,4 +17,6 @@ upload/
 # Папка с собранными файлами проекта
 build/
 
+# файлы с генеренными данными
 mocks.json
+pgsql/fill-db.pgsql
