@@ -20,3 +20,6 @@ build/
 # файлы с генеренными данными
 mocks.json
 pgsql/fill-db.pgsql
+
+# Файл с переменными окружения
+.env
