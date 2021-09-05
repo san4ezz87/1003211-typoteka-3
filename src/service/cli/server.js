@@ -18,6 +18,7 @@ const {
   handleServerError,
   handleClientError
 } = require(`../middlewares`);
+const sequelize = require("../lib/sequelize");
 
 app.use(express.json());
 
@@ -34,8 +35,17 @@ app.use(handleClientError);
 
 module.exports = {
   name: `--server`,
-  run([customPort]) {
+  async run([customPort]) {
     const port = Number.parseInt(customPort, 10) || DEFAULT_PORT;
+
+    try {
+      logger.info(`Trying to connect to database ...`)
+      await sequelize.authenticate();
+    } catch (err) {
+      logger.error(`An error occured: ${err.message}`)
+      process.exit(1);
+
+    }
 
     try {
       app.listen(port, (err) => {
