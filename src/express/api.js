@@ -20,8 +20,8 @@ class API {
     return response.data;
   }
 
-  async getArticles() {
-    return this._load(`/articles/`);
+  async getArticles({comments}) {
+    return this._load(`/articles/`, {params: {comments}});
   }
 
   async getArticle(id) {

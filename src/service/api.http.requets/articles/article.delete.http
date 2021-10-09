@@ -1,1 +1,1 @@
-DELETE http://localhost:3000/api/articles/Tve60G HTTP/1.1
+DELETE http://localhost:3000/api/articles/11 HTTP/1.1

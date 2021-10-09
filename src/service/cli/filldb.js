@@ -1,16 +1,18 @@
 "use strict";
 
 const path = require(`path`);
+const Aliase = require(`../models/aliase`);
+
 const {
-  getRandomNumber,
   shuffle,
-  generateDate,
-  formatDate,
   getStaticFromFile,
-  writeFile,
+  getRandomNumber,
 } = require(`../../utils`);
 
-const {nanoid} = require(`nanoid`);
+const defineModels = require(`../models`);
+
+const sequelize = require(`../lib/sequelize`);
+
 const {MAX_ID_LENGTH} = require(`../constants`);
 
 const {getLogger} = require(`../lib/logger`);
@@ -30,50 +32,50 @@ const MAX_ELEMENTS = 1000;
 
 const srcsetList = [`@1x.jpg`, `@2x.jpg 2x`];
 
+const getRandomSubarray = (items) => {
+  items = items.slice();
+  let count = getRandomNumber(1, items.length - 1);
+  const result = [];
+  while (count--) {
+    const id = getRandomNumber(1, items.length)
+    if (!result.includes(id)) {
+      result.push(id);
+    }
+  }
+  return result;
+};
+
 const buildSrcset = (picturName) => {
   return srcsetList.map((pictureSize) => {
     return `img/${picturName}${pictureSize}`;
   });
 };
 
-const generateArticless = (count, titles, announces, cantegory, comments, images) => {
+const generateArticless = (count, titles, announces, category, comments, images) => {
   return Array(count)
     .fill({})
     .map((_, index) => {
-      const date = generateDate();
-      const dateFormated = formatDate(date);
-      const id = nanoid(MAX_ID_LENGTH);
 
       const srcSet = index % 4 ? buildSrcset(shuffle(images).slice(0, 1)) : [];
 
       return {
-        id,
         title: titles[getRandomNumber(0, titles.length - 1)],
-        createdDate: dateFormated,
         announce: shuffle(announces).slice(0, 4).join(` `),
-        fullText: shuffle(announces).slice(0, getRandomNumber(4, 23)).join(` `),
-        category: shuffle(cantegory).slice(
-            0,
-            getRandomNumber(1, 4)
-        ),
+        full_text: shuffle(announces).slice(0, getRandomNumber(4, 23)).join(` `),
+        category: getRandomSubarray(category),
         comments: Array(getRandomNumber(0, 10)).fill({}).map(() => {
           return {
-            id: nanoid(MAX_ID_LENGTH),
             text: shuffle(comments).slice(1, getRandomNumber(2, comments.length - 1)).join(``)
           };
         }),
-        img: {
-          srcSet: srcSet.join(`, `),
-          src: srcSet[0] || ``,
-          alt: srcSet[0]
-        }
+        picture: srcSet[0],
       };
     });
 };
 
 
 module.exports = {
-  name: `--generate`,
+  name: `--filldb`,
   async run([count]) {
     const countChecked = Number.parseInt(count, 10) || COUNT_DEFAULT;
 
@@ -82,13 +84,37 @@ module.exports = {
       return;
     }
 
+    try {
+      logger.info(`Trying to connect to database ...`);
+      await sequelize.authenticate();
+    } catch (err) {
+      logger.error(`An error occured: ${err.message}`);
+      process.exit(1);
+    }
+
+    logger.info(`Connection to database established`);
+
+    const {Category, Article} = defineModels(sequelize);
+
+      await sequelize.sync({force: true});
+
+
     const titles = await getStaticFromFile(preparePath(TITLLES_URL), logger);
     const announces = await getStaticFromFile(preparePath(ANNOUNCE_URL), logger);
     const cantegory = await getStaticFromFile(preparePath(CATEGORY_URL), logger);
     const comments = await getStaticFromFile(preparePath(COMMENTS_URL), logger);
     const images = await getStaticFromFile(preparePath(IMG_URL), logger);
 
-    const content = JSON.stringify(generateArticless(countChecked, titles, announces, cantegory, comments, images), null, 2);
-    writeFile(`mocks.json`, content, logger);
+    const categoryModels = await Category.bulkCreate(
+      cantegory.map((item) => ({name: item}))
+    )
+
+    const articles = generateArticless(countChecked, titles, announces, cantegory, comments, images);
+    const articlesPromises = articles.map(async (article) => {
+      const articleModel = await Article.create(article, {include: [Aliase.COMMENTS]});
+      await articleModel.addCategories(article.category);
+    });
+
+    await Promise.all(articlesPromises)
   },
 };

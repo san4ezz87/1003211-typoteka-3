@@ -7,7 +7,7 @@ const api = getAPI();
 const router = new express.Router();
 
 router.get(`/`, async (req, res) => {
-  const articles = await api.getArticles();
+  const articles = await api.getArticles({comments: true});
   res.render(`main`, {articles});
 });
 

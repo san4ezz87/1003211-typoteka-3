@@ -2,9 +2,9 @@
 
 const {HttpCode} = require(`../constants`);
 
-module.exports = (articleService) => (req, res, next) => {
+module.exports = (articleService) => async (req, res, next) => {
   const {articleId} = req.params;
-  const article = articleService.findOne(articleId);
+  const article = await articleService.findOne(articleId);
 
   if (!article) {
     res.status(HttpCode.NOT_FOUND).send(`Article with ${articleId} not found`);
