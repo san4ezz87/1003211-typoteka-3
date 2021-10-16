@@ -1,14 +1,18 @@
-'use strict';
+"use strict";
 
 const express = require(`express`);
-const {getAPI} = require(`../api.js`);
+const { getAPI } = require(`../api.js`);
 const api = getAPI();
 
 const router = new express.Router();
 
 router.get(`/`, async (req, res) => {
-  const articles = await api.getArticles({comments: true});
-  res.render(`main`, {articles});
+  const [articles, categories] = await Promise.all([
+    api.getArticles({ comments: true }),
+    api.getCategories(true),
+  ]);
+
+  res.render(`main`, { articles, categories });
 });
 
 router.get(`/register`, (req, res) => {
@@ -22,12 +26,10 @@ router.get(`/login`, (req, res) => {
 router.get(`/search`, async (req, res) => {
   try {
     const searcedArticles = await api.search(req.query.search);
-    res.render(`search`, {searcedArticles});
+    res.render(`search`, { searcedArticles });
   } catch (err) {
-    res.render(`search`, {searcedArticles: null});
-
+    res.render(`search`, { searcedArticles: null });
   }
-
 });
 
 router.get(`/categories`, (req, res) => {
@@ -35,5 +37,3 @@ router.get(`/categories`, (req, res) => {
 });
 
 module.exports = router;
-
-

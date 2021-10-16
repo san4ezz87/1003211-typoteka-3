@@ -1,7 +1,5 @@
-'use strict';
+"use strict";
 
-const {nanoid} = require(`nanoid`);
-const {MAX_ID_LENGTH} = require(`../constants`);
 const Aliase = require(`../models/aliase`);
 
 class ArticlesService {
@@ -14,21 +12,25 @@ class ArticlesService {
   async findAll(needComments) {
     const include = [Aliase.CATEGORIES];
 
-    if(needComments) {
+    if (needComments) {
       include.push(Aliase.COMMENTS);
     }
 
     const articles = await this._Article.findAll({
       include,
-      order: [
-        [`createdAt`, `DESC`]
-      ]
-    })
+      order: [[`createdAt`, `DESC`]],
+    });
     return articles.map((item) => item.get());
   }
 
-  findOne(id) {
-    return this._Article.findByPk(id, {include: [Aliase.CATEGORIES]});
+  findOne(id, needComments) {
+    const include = [Aliase.CATEGORIES];
+
+    if (needComments) {
+      include.push(Aliase.COMMENTS);
+    }
+
+    return this._Article.findByPk(id, { include });
   }
 
   async create(articleData) {
@@ -39,20 +41,20 @@ class ArticlesService {
 
   async update(id, article) {
     const [affectedRows] = await this._Article.update(article, {
-      where: {id}
-    })
+      where: { id },
+    });
 
     return !!affectedRows;
   }
 
   async drop(id) {
     const deletedRows = await this._Article.destroy({
-      where: {id}
+      where: { id },
     });
     return !!deletedRows;
   }
 }
 
 module.exports = {
-  ArticlesService
+  ArticlesService,
 };
