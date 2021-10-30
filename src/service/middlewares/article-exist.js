@@ -3,10 +3,9 @@
 const { HttpCode } = require(`../constants`);
 
 module.exports = (articleService) => async (req, res, next) => {
-  const { articleId } = req.params;
-  const { comments } = req.query;
+  const { articleId, commentId } = req.params;
 
-  const article = await articleService.findOne(articleId, comments);
+  const article = await articleService.findOne(articleId, commentId);
 
   if (!article) {
     res.status(HttpCode.NOT_FOUND).send(`Article with ${articleId} not found`);

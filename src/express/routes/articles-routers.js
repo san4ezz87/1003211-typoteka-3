@@ -30,12 +30,8 @@ router.post(`/add`, upload.single(`upload`), async (req, res) => {
       src: file.filename,
     },
   };
-  try {
-    await api.createArticle(article);
-    res.redirect(`/my`);
-  } catch (err) {
-    res.render(`admin-add-new-post`, { article, categories: [] });
-  }
+  await api.createArticle(article);
+  res.redirect(`/my`);
 });
 
 router.get(`/edit/:id`, async (req, res) => {
@@ -61,7 +57,7 @@ router.get(`/edit/:id`, async (req, res) => {
 router.get(`/:id`, async (req, res) => {
   const { id } = req.params;
   const article = await api.getArticle(id, { comments: true });
-  console.log(`comments`, article.comments);
+
   res.render(`article`, { article });
 });
 

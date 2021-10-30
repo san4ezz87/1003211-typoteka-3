@@ -1,8 +1,8 @@
-'use strict';
+"use strict";
 
-const {HttpCode} = require(`../constants`);
+const { HttpCode } = require(`../constants`);
 
-const articleKeys = [`title`, `announce`, `full_text`, `category`];
+const articleKeys = [`title`, `announce`, `full_text`, `categories`];
 
 module.exports = (req, res, next) => {
   const newArticle = req.body;
@@ -14,5 +14,6 @@ module.exports = (req, res, next) => {
     res.status(HttpCode.BAD_REQUEST).send(`Bad request`);
     return null;
   }
+
   return next();
 };

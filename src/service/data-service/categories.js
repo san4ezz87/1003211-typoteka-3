@@ -10,7 +10,6 @@ class CategoriesService {
   }
 
   async findAll(needCount) {
-    console.log({ needCount });
     if (needCount) {
       const result = await this._Category.findAll({
         attributes: [`id`, `name`, [Sequelize.fn(`COUNT`, `*`), `count`]],

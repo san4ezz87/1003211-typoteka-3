@@ -1,23 +1,16 @@
 "use strict";
 
 const path = require(`path`);
-const Aliase = require(`../models/aliase`);
 
-const {
-  shuffle,
-  getStaticFromFile,
-  getRandomNumber,
-} = require(`../../utils`);
+const { shuffle, getStaticFromFile, getRandomNumber } = require(`../../utils`);
 
-const defineModels = require(`../models`);
+const initDb = require(`../lib/init-db`);
 
 const sequelize = require(`../lib/sequelize`);
 
-const {MAX_ID_LENGTH} = require(`../constants`);
+const { getLogger } = require(`../lib/logger`);
 
-const {getLogger} = require(`../lib/logger`);
-
-const logger = getLogger({name: `generator`});
+const logger = getLogger({ name: `generator` });
 
 const TITLLES_URL = `./data/titles.txt`;
 const ANNOUNCE_URL = `./data/sentences.txt`;
@@ -37,7 +30,7 @@ const getRandomSubarray = (items) => {
   let count = getRandomNumber(1, items.length - 1);
   const result = [];
   while (count--) {
-    const id = getRandomNumber(1, items.length)
+    const id = getRandomNumber(1, items.length);
     if (!result.includes(id)) {
       result.push(id);
     }
@@ -51,28 +44,39 @@ const buildSrcset = (picturName) => {
   });
 };
 
-const generateArticless = (count, titles, announces, category, comments, images) => {
+const generateArticless = (
+  count,
+  titles,
+  announces,
+  category,
+  comments,
+  images
+) => {
   return Array(count)
     .fill({})
     .map((_, index) => {
-
       const srcSet = index % 4 ? buildSrcset(shuffle(images).slice(0, 1)) : [];
 
       return {
         title: titles[getRandomNumber(0, titles.length - 1)],
         announce: shuffle(announces).slice(0, 4).join(` `),
-        full_text: shuffle(announces).slice(0, getRandomNumber(4, 23)).join(` `),
+        full_text: shuffle(announces)
+          .slice(0, getRandomNumber(4, 23))
+          .join(` `),
         category: getRandomSubarray(category),
-        comments: Array(getRandomNumber(0, 10)).fill({}).map(() => {
-          return {
-            text: shuffle(comments).slice(1, getRandomNumber(2, comments.length - 1)).join(``)
-          };
-        }),
+        comments: Array(getRandomNumber(0, 10))
+          .fill({})
+          .map(() => {
+            return {
+              text: shuffle(comments)
+                .slice(1, getRandomNumber(2, comments.length - 1))
+                .join(``),
+            };
+          }),
         picture: srcSet[0],
       };
     });
 };
-
 
 module.exports = {
   name: `--filldb`,
@@ -80,7 +84,7 @@ module.exports = {
     const countChecked = Number.parseInt(count, 10) || COUNT_DEFAULT;
 
     if (countChecked > MAX_ELEMENTS) {
-      logger.error(`Не больше 1000 объявлений`);
+      logger.error(`Не больше 1000 статей`);
       return;
     }
 
@@ -94,27 +98,27 @@ module.exports = {
 
     logger.info(`Connection to database established`);
 
-    const {Category, Article} = defineModels(sequelize);
-
-      await sequelize.sync({force: true});
-
-
     const titles = await getStaticFromFile(preparePath(TITLLES_URL), logger);
-    const announces = await getStaticFromFile(preparePath(ANNOUNCE_URL), logger);
-    const cantegory = await getStaticFromFile(preparePath(CATEGORY_URL), logger);
+    const announces = await getStaticFromFile(
+      preparePath(ANNOUNCE_URL),
+      logger
+    );
+    const cantegories = await getStaticFromFile(
+      preparePath(CATEGORY_URL),
+      logger
+    );
     const comments = await getStaticFromFile(preparePath(COMMENTS_URL), logger);
     const images = await getStaticFromFile(preparePath(IMG_URL), logger);
 
-    const categoryModels = await Category.bulkCreate(
-      cantegory.map((item) => ({name: item}))
-    )
+    const articles = generateArticless(
+      countChecked,
+      titles,
+      announces,
+      cantegories,
+      comments,
+      images
+    );
 
-    const articles = generateArticless(countChecked, titles, announces, cantegory, comments, images);
-    const articlesPromises = articles.map(async (article) => {
-      const articleModel = await Article.create(article, {include: [Aliase.COMMENTS]});
-      await articleModel.addCategories(article.category);
-    });
-
-    await Promise.all(articlesPromises)
+    await initDb(sequelize, { categories, articles });
   },
 };
