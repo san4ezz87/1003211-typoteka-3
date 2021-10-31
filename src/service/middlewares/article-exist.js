@@ -1,10 +1,11 @@
-'use strict';
+"use strict";
 
-const {HttpCode} = require(`../constants`);
+const { HttpCode } = require(`../constants`);
 
-module.exports = (articleService) => (req, res, next) => {
-  const {articleId} = req.params;
-  const article = articleService.findOne(articleId);
+module.exports = (articleService) => async (req, res, next) => {
+  const { articleId, commentId } = req.params;
+
+  const article = await articleService.findOne(articleId, commentId);
 
   if (!article) {
     res.status(HttpCode.NOT_FOUND).send(`Article with ${articleId} not found`);

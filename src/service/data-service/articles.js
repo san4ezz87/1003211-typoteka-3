@@ -1,53 +1,91 @@
-'use strict';
+"use strict";
 
-const {nanoid} = require(`nanoid`);
-const {MAX_ID_LENGTH} = require(`../constants`);
+const Aliase = require(`../models/aliase`);
+const { Op } = require("sequelize");
 
 class ArticlesService {
-  constructor(articles) {
-    this._articles = articles;
+  constructor(sequelize) {
+    this._Article = sequelize.models.Article;
+    this._Comment = sequelize.models.Comment;
+    this._Category = sequelize.models.Category;
+    this._ArticleCategory = sequelize.models.ArticleCategory;
   }
 
-  findAll() {
-    return this._articles;
-  }
+  async findAll(needComments) {
+    const include = [Aliase.CATEGORIES];
 
-  findOne(id) {
-    return this._articles.find((article) => article.id === id);
-  }
+    if (needComments) {
+      include.push(Aliase.COMMENTS);
+    }
 
-  create(article) {
-    const newArticle = Object.assign({id: nanoid(MAX_ID_LENGTH), comments: []}, article);
-    this._articles.push(newArticle);
-    return newArticle;
-  }
-
-  update(id, article) {
-    const oldArticle = this._articles.find((item) => (item.id === id));
-
-    return Object.assign(oldArticle || {id: nanoid(MAX_ID_LENGTH)}, article);
-  }
-
-  drop(article) {
-    this._articles = this._articles.filter((item) => {
-      return item.id !== article.id;
+    const articles = await this._Article.findAll({
+      include,
+      order: [[`createdAt`, `DESC`]],
     });
-    return article;
+    return articles.map((item) => item.get());
   }
 
-  dropComment(article, comment) {
-    article.comments = article.comments.filter((item) => (item.id !== comment.id));
+  async findOne(id, needComments) {
+    const include = [Aliase.CATEGORIES];
+
+    if (needComments) {
+      include.push(Aliase.COMMENTS);
+    }
+
+    const article = await this._Article.findByPk(id, { include });
+
+    return article && article.get();
   }
 
-  createComment(article, comment) {
-    const newComment = Object.assign({id: nanoid(MAX_ID_LENGTH)}, comment);
+  async create(articleData) {
+    const categories = await this._Category.findAll({
+      where: {
+        name: {
+          [Op.or]: articleData.categories.map((item) => item.name),
+        },
+      },
+    });
 
-    article.comments.push(newComment);
+    const article = await this._Article.create(articleData);
+    await article.addCategories(categories);
 
-    return newComment;
+    const updatedArticle = await this._Article.findOne({
+      where: {
+        id: article.id,
+      },
+      attributes: {
+        exclude: ["createdAt", "updatedAt", "picture", "id"],
+      },
+      include: [
+        {
+          model: this._Category,
+          as: Aliase.CATEGORIES,
+          attributes: ["name"],
+          through: {
+            attributes: [], // this helps removing the join table in returned data
+          },
+        },
+      ],
+    });
+    return updatedArticle.get();
+  }
+
+  async update(id, article) {
+    const [affectedRows] = await this._Article.update(article, {
+      where: { id },
+    });
+
+    return !!affectedRows;
+  }
+
+  async drop(id) {
+    const deletedRows = await this._Article.destroy({
+      where: { id },
+    });
+    return !!deletedRows;
   }
 }
 
 module.exports = {
-  ArticlesService
+  ArticlesService,
 };
