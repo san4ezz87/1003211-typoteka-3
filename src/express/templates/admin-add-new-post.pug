@@ -32,10 +32,10 @@ block content
                         | Обзор
                     button.button.button--transparent Удалить
                   .new-publication__category-wrapper
-                    each category, index in article.category
+                    each category, index in article.categories
                       .new-publication__checkbox.new-publication__checkbox--auto
                         input(id='checkbox' + index type='checkbox' name='category-' + index)
-                        label(for='checkbox' + index) #{category}
+                        label(for='checkbox' + index) #{category.name}
                     a.new-publication__form-link.button.button--transparent(href='#') Добавить категорию
                 .form__wrapper.form__wrapper--text
                   .form__field.form__field--publication-text
