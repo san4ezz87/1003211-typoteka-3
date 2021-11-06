@@ -6,13 +6,23 @@ const api = getAPI();
 
 const router = new express.Router();
 
+const OFFERS_PER_PAGE = 8;
+
 router.get(`/`, async (req, res) => {
-  const [articles, categories] = await Promise.all([
-    api.getArticles({ comments: true }),
+  let { page = 1 } = req.query;
+  page = +page;
+  const limit = OFFERS_PER_PAGE;
+
+  const offset = (page - 1) * OFFERS_PER_PAGE;
+
+  const [{ count, articles }, categories] = await Promise.all([
+    api.getArticles({ limit, offset, comments: true }),
     api.getCategories(true),
   ]);
 
-  res.render(`main`, { articles, categories });
+  const totalPages = Math.ceil(count / OFFERS_PER_PAGE);
+
+  res.render(`main`, { page, totalPages, articles, categories });
 });
 
 router.get(`/register`, (req, res) => {

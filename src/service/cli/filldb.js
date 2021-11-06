@@ -63,7 +63,7 @@ const generateArticless = (
         full_text: shuffle(announces)
           .slice(0, getRandomNumber(4, 23))
           .join(` `),
-        category: getRandomSubarray(category),
+        categories: getRandomSubarray(category),
         comments: Array(getRandomNumber(0, 10))
           .fill({})
           .map(() => {
@@ -103,7 +103,7 @@ module.exports = {
       preparePath(ANNOUNCE_URL),
       logger
     );
-    const cantegories = await getStaticFromFile(
+    const categoriesText = await getStaticFromFile(
       preparePath(CATEGORY_URL),
       logger
     );
@@ -114,10 +114,14 @@ module.exports = {
       countChecked,
       titles,
       announces,
-      cantegories,
+      categoriesText,
       comments,
       images
     );
+
+    const categories = categoriesText.map((category) => {
+      return { name: category };
+    });
 
     await initDb(sequelize, { categories, articles });
   },
