@@ -3,7 +3,7 @@ const express = require(`express`);
 const request = require(`supertest`);
 const Sequelize = require(`sequelize`);
 
-const initDB = require(`../lib/ init-db`);
+const initDB = require(`../lib/init-db`);
 const search = require(`./search`);
 const { SearchService } = require(`../data-service/search`);
 const { HttpCode } = require(`../constants`);
@@ -158,14 +158,10 @@ const app = express();
 app.use(express.json());
 
 beforeAll(async () => {
-  try {
-    await initDB(mockDB, {
-      categories: mockCategories,
-      articles: mockArticles,
-    });
-  } catch (err) {
-    console.log("in init db", err);
-  }
+  await initDB(mockDB, {
+    categories: mockCategories,
+    articles: mockArticles,
+  });
 
   search(app, new SearchService(mockDB));
 });
