@@ -7,7 +7,7 @@ const request = require(`supertest`);
 const { HttpCode } = require(`../constants`);
 
 const Sequelize = require(`sequelize`);
-const initDB = require(`../lib/ init-db`);
+const initDB = require(`../lib/init-db`);
 
 const mockCategories = [
   { name: `Деревья` },
