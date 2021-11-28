@@ -4,6 +4,8 @@ const { Router } = require(`express`);
 const router = new Router();
 const multer = require(`multer`);
 
+const { ensureArray, prepareErrors } = require(`../../utils`);
+
 const { storage } = require(`../middlewares`);
 
 const { getAPI } = require(`../api.js`);
@@ -13,25 +15,38 @@ router.get(`/category/:id`, (req, res) => {
   res.render(`articles-by-category`);
 });
 
-router.get(`/add`, (req, res) => {
-  res.render(`admin-add-new-post-empty`);
+router.get(`/add`, async (req, res) => {
+  const categories = await api.getCategories();
+
+  console.log("categories *****", categories);
+
+  res.render(`admin-add-new-post-empty`, { categories });
 });
 
 const upload = multer({ storage });
 
 router.post(`/add`, upload.single(`upload`), async (req, res) => {
   const { body, file } = req;
+  console.log("body.category", body);
   const article = {
     title: body.title,
     announce: body.announce,
     fullText: body.fullText,
-    category: Array.isArray(body.category) ? body.category : [body.category],
+    categories: ensureArray(body.categories || ""),
     img: {
-      src: file.filename,
+      src: (file && file.filename) || "",
     },
   };
-  await api.createArticle(article);
-  res.redirect(`/my`);
+
+  try {
+    await api.createArticle(article);
+    res.redirect(`/my`);
+  } catch (errors) {
+    const validationMessages = prepareErrors(errors);
+    const categories = await api.getCategories();
+
+    res.render(`admin-add-new-post-empty`, { categories, validationMessages });
+  }
 });
 
 router.get(`/edit/:id`, async (req, res) => {

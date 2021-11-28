@@ -42,9 +42,9 @@ module.exports = (app, articleService, commentService) => {
     articleValidator,
     async (req, res) => {
       const id = req.params.articleId;
-      const article = await articleService.update(id, req.body);
+      const isUpdated = await articleService.update(id, req.body);
 
-      res.status(HttpCode.OK).json(article);
+      res.status(HttpCode.OK).json(isUpdated);
     }
   );
 

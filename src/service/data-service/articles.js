@@ -58,7 +58,7 @@ class ArticlesService {
     const categories = await this._Category.findAll({
       where: {
         name: {
-          [Op.or]: articleData.categories.map((item) => item.name),
+          [Op.or]: articleData.categories,
         },
       },
     });

@@ -1,0 +1,13 @@
+style.
+  .server-error{
+    border-radius: 10px;
+    color: white;
+    background-color: tomato;
+    margin: 20px 0;
+    padding: 10px;
+  }
+
+mixin insertErrorMessage(messages)
+  if messages
+    each message in messages
+      .server-error #{message}
