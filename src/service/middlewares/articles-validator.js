@@ -15,7 +15,7 @@ const ErrorOfferMessage = {
   ANNOUNCE_EMPTY: `Описание не может быть пустым`,
   FULL_TEXT_EMPTY: `Текст не может быть пустым`,
   FULL_TEXT_MIN: `Текст содержит меньше 50 символов`,
-  FULL_TEXT_MAX: `Тексе не может содержать более 200 символов`,
+  FULL_TEXT_MAX: `Тексе не может содержать более 1000 символов`,
 };
 
 const schema = Joi.object({
