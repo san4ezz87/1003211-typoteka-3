@@ -60,9 +60,7 @@ const generateArticless = (
       return {
         title: titles[getRandomNumber(0, titles.length - 1)],
         announce: shuffle(announces).slice(0, 4).join(` `),
-        full_text: shuffle(announces)
-          .slice(0, getRandomNumber(4, 23))
-          .join(` `),
+        fullText: shuffle(announces).slice(0, getRandomNumber(4, 23)).join(` `),
         categories: getRandomSubarray(category),
         comments: Array(getRandomNumber(0, 10))
           .fill({})

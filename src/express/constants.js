@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 const HttpCode = {
   OK: 200,
@@ -15,9 +15,15 @@ const Env = {
   DEVELOPMENT: `development`,
   PRODUCTION: `production`,
 };
+const HttpMethod = {
+  GET: `GET`,
+  POST: `POST`,
+  PUT: `PUT`,
+  DELETE: `DELETE`,
+};
 
 module.exports = {
   HttpCode,
-  Env
+  Env,
+  HttpMethod,
 };
-
