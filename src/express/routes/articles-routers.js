@@ -117,6 +117,7 @@ router.post(`/:id/comments`, async (req, res) => {
 
   try {
     await api.createComment(id, comment);
+    res.redirect(`/articles/${id}`);
   } catch (errors) {
     const article = await api.getArticle(id, { comments: true });
     const validationMessages = prepareErrors(errors);

@@ -19,7 +19,7 @@ const ErrorOfferMessage = {
 };
 
 const schema = Joi.object({
-  categories: Joi.array().required().items(Joi.string()).messages({
+  categories: Joi.array().required().items(Joi.string().required()).messages({
     "string.empty": ErrorOfferMessage.CATEGORIES,
   }),
   title: Joi.string().min(10).max(100).required().messages({
@@ -41,7 +41,6 @@ const schema = Joi.object({
 
 module.exports = (req, res, next) => {
   const newArticle = req.body;
-  console.log("newArticle", newArticle);
 
   const { error } = schema.validate(newArticle, { abortEarly: false });
 
