@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 const API_PREFIX = `/api`;
 
@@ -21,11 +21,18 @@ const Env = {
   PRODUCTION: `production`,
 };
 
+const HttpMethod = {
+  GET: `GET`,
+  POST: `POST`,
+  PUT: `PUT`,
+  DELETE: `DELETE`,
+};
+
 module.exports = {
   API_PREFIX,
   DEFAULT_PORT,
   MAX_ID_LENGTH,
   HttpCode,
   Env,
+  HttpMethod,
 };
-
