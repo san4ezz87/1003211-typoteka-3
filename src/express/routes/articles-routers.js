@@ -2,11 +2,10 @@
 
 const { Router } = require(`express`);
 const router = new Router();
-const multer = require(`multer`);
 
 const { ensureArray, prepareErrors } = require(`../../utils`);
 
-const { storage } = require(`../middlewares`);
+const { upload } = require(`../middlewares`);
 
 const { getAPI } = require(`../api.js`);
 const api = getAPI();
@@ -27,8 +26,6 @@ router.get(`/add`, async (req, res) => {
 
   res.render(`admin-add-new-post-empty`, { categories });
 });
-
-const upload = multer({ storage });
 
 router.post(`/add`, upload.single(`upload`), async (req, res) => {
   const { body, file } = req;

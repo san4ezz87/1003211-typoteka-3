@@ -6,7 +6,7 @@ class UserService {
   }
 
   async create(userData) {
-    const user = await this._User.create(UserData);
+    const user = await this._User.create(userData);
     return user.get();
   }
 
@@ -18,4 +18,4 @@ class UserService {
   }
 }
 
-module.exports = UserService;
+module.exports = { UserService };

@@ -53,7 +53,7 @@ const define = (sequelize) => {
   User.hasMany(Comment, { as: Aliase.COMMENTS, foreignKey: `userId` });
   Comment.belongsTo(User, { as: Aliase.USER, foreignKey: `userId` });
 
-  return { Category, Comment, ArticleCategory, Article };
+  return { Category, Comment, ArticleCategory, Article, User };
 };
 
 module.exports = define;

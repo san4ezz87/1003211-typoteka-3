@@ -1,11 +1,11 @@
-'use strict';
+"use strict";
 
-const {storage} = require(`./img-storage`);
+const upload = require(`./img-storage`);
 const handleServerError = require(`./handle-server-error`);
 const handleClientError = require(`./handle-client-error`);
 
 module.exports = {
-  storage,
+  upload,
   handleServerError,
-  handleClientError
+  handleClientError,
 };

@@ -33,7 +33,7 @@ class ArticlesService {
     const include = [
       Aliase.CATEGORIES,
       {
-        nodel: this._User,
+        model: this._User,
         as: Aliase.USER,
         attributes: {
           exllude: [`passwordHash`],
@@ -68,7 +68,7 @@ class ArticlesService {
     const include = [
       Aliase.CATEGORIES,
       {
-        nodel: this._User,
+        model: this._User,
         as: Aliase.USER,
         attributes: {
           exllude: [`passwordHash`],
