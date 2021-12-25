@@ -9,7 +9,7 @@ block content
           a.popup__button.button.button--popup-close(aria-label='Закрыть окно') Закрыть окно
           h2.popup__title Регистрация
           .popup__form.popup__form--active.form.form--register
-            form(action='/register' method='post')
+            form(action='/register' method='post' enctype='multipart/form-data')
               .form__field
                 label
                   input(type='email' name='email' placeholder='Электронная почта' required)
@@ -36,7 +36,7 @@ block content
                 a.form__avatar.avatar
                   img(src='img/icons/smile.svg' alt='аватар пользователя')
                 label
-                  input.visually-hidden(type='file' name='upload')
+                  input.visually-hidden(type='file' name='avatar')
                   | Загрузить фото профиля
               button.form__submit-btn.form__submit-btn--register.button.button--colored(type='submit') Зарегистрироваться
     include ./common/footer.pug

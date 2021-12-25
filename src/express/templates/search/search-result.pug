@@ -1,4 +1,4 @@
 each article in searcedArticles
   .search__result
     time.search__date(datetime='2019-03-21T20:33') #{article.createdDate}
-    a.search__link #{article.title}
+    a.search__link(href='/articles/' + article.id) #{article.title}
