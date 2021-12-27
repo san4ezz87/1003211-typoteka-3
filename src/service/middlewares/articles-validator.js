@@ -16,6 +16,8 @@ const ErrorOfferMessage = {
   FULL_TEXT_EMPTY: `Текст не может быть пустым`,
   FULL_TEXT_MIN: `Текст содержит меньше 50 символов`,
   FULL_TEXT_MAX: `Тексе не может содержать более 1000 символов`,
+  USER_ID: `Некорректный идентификатор пользователя`,
+  EMAIL: `Некорректный электронный адрес`,
 };
 
 const schema = Joi.object({
@@ -37,6 +39,12 @@ const schema = Joi.object({
     "string.empty": ErrorOfferMessage.FULL_TEXT_EMPTY,
   }),
   img: Joi.any(),
+  user: Joi.string().email().required().messages({
+    "string.email": ErrorOfferMessage.EMAIL,
+  }),
+  userId: Joi.number().integer().positive().required().messages({
+    "number.base": ErrorOfferMessage.USER_ID,
+  }),
 });
 
 module.exports = (req, res, next) => {

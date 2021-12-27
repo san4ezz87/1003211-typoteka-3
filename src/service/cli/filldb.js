@@ -12,6 +12,8 @@ const { getLogger } = require(`../lib/logger`);
 
 const logger = getLogger({ name: `generator` });
 
+const passwordUtils = require(`../lib/password`);
+
 const TITLLES_URL = `./data/titles.txt`;
 const ANNOUNCE_URL = `./data/sentences.txt`;
 const CATEGORY_URL = `./data/categories.txt`;
@@ -50,7 +52,8 @@ const generateArticless = (
   announces,
   category,
   comments,
-  images
+  images,
+  users
 ) => {
   return Array(count)
     .fill({})
@@ -69,9 +72,11 @@ const generateArticless = (
               text: shuffle(comments)
                 .slice(1, getRandomNumber(2, comments.length - 1))
                 .join(``),
+              user: users[getRandomNumber(0, users.length - 1)].email,
             };
           }),
         picture: srcSet[0],
+        user: users[getRandomNumber(0, users.length - 1)].email,
       };
     });
 };
@@ -80,6 +85,21 @@ module.exports = {
   name: `--filldb`,
   async run([count]) {
     const countChecked = Number.parseInt(count, 10) || COUNT_DEFAULT;
+
+    const users = [
+      {
+        name: `Иван Иванов`,
+        email: `ivanov@example.com`,
+        passwordHash: await passwordUtils.hash(`ivanov`),
+        avatar: `avatar01.jpg`,
+      },
+      {
+        name: `Пётр Петров`,
+        email: `petrov@example.com`,
+        passwordHash: await passwordUtils.hash(`petrov`),
+        avatar: `avatar02.jpg`,
+      },
+    ];
 
     if (countChecked > MAX_ELEMENTS) {
       logger.error(`Не больше 1000 статей`);
@@ -114,13 +134,14 @@ module.exports = {
       announces,
       categoriesText,
       comments,
-      images
+      images,
+      users
     );
 
     const categories = categoriesText.map((category) => {
       return { name: category };
     });
 
-    await initDb(sequelize, { categories, articles });
+    await initDb(sequelize, { categories, articles, users });
   },
 };

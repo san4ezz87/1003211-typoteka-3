@@ -9,6 +9,7 @@ class ArticlesService {
     this._Comment = sequelize.models.Comment;
     this._Category = sequelize.models.Category;
     this._ArticleCategory = sequelize.models.ArticleCategory;
+    this._User = sequelize.models.User;
   }
 
   async findPage({ limit, offset, comments }) {
@@ -29,10 +30,31 @@ class ArticlesService {
   }
 
   async findAll(needComments) {
-    const include = [Aliase.CATEGORIES];
+    const include = [
+      Aliase.CATEGORIES,
+      {
+        model: this._User,
+        as: Aliase.USER,
+        attributes: {
+          exllude: [`passwordHash`],
+        },
+      },
+    ];
 
     if (needComments) {
-      include.push(Aliase.COMMENTS);
+      include.push({
+        model: this._Comment,
+        as: Aliase.COMMENTS,
+        include: [
+          {
+            model: this._User,
+            as: Aliase.USER,
+            attributes: {
+              exclude: [`passwordHash`],
+            },
+          },
+        ],
+      });
     }
 
     const articles = await this._Article.findAll({
@@ -43,10 +65,31 @@ class ArticlesService {
   }
 
   async findOne(id, needComments) {
-    const include = [Aliase.CATEGORIES];
+    const include = [
+      Aliase.CATEGORIES,
+      {
+        model: this._User,
+        as: Aliase.USER,
+        attributes: {
+          exllude: [`passwordHash`],
+        },
+      },
+    ];
 
     if (needComments) {
-      include.push(Aliase.COMMENTS);
+      include.push({
+        model: this._Comment,
+        as: Aliase.COMMENTS,
+        include: [
+          {
+            model: this._User,
+            as: Aliase.USER,
+            attributes: {
+              exclude: [`passwordHash`],
+            },
+          },
+        ],
+      });
     }
 
     const article = await this._Article.findByPk(id, { include });

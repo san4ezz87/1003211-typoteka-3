@@ -1,9 +1,11 @@
 "use strict";
 
 const express = require(`express`);
+const { prepareErrors } = require("../../utils/prepareErrors.js");
 const { getAPI } = require(`../api.js`);
 const api = getAPI();
 
+const { upload } = require(`../middlewares`);
 const router = new express.Router();
 
 const OFFERS_PER_PAGE = 8;
@@ -27,6 +29,26 @@ router.get(`/`, async (req, res) => {
 
 router.get(`/register`, (req, res) => {
   res.render(`sign-up`);
+});
+
+router.post(`/register`, upload.single(`avatar`), async (req, res) => {
+  const { body, file } = req;
+
+  const userData = {
+    avatar: file ? file.filename : ``,
+    name: body[`name`],
+    email: body[`email`],
+    password: body[`password`],
+    passwordRepeated: body[`repeat-password`],
+  };
+
+  try {
+    await api.createUser(userData);
+    res.redirect(`/login`);
+  } catch (errors) {
+    const validationMessages = prepareErrors(errors);
+    res.render(`sign-up`, { validationMessages });
+  }
 });
 
 router.get(`/login`, (req, res) => {
