@@ -19,6 +19,7 @@ const define = (sequelize) =>
         type: DataTypes.TEXT,
         allowNull: false,
       },
+      user: DataTypes.STRING,
       picture: DataTypes.STRING,
     },
     {

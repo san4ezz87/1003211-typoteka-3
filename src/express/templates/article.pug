@@ -14,7 +14,7 @@ block content
           h2.visually-hidden Основное содержание
           .post__wrapper
             .post__head
-              a.post__backwards.button.button--backwards(href='#') Назад
+              a.post__backwards.button.button--backwards(href='javascript:history.back()') Назад
               time.post__date #{formatDate(article.createdAt)}
               h2.post__title.title.title--main #{article.title}
               ul.post__themes.themes
@@ -35,10 +35,10 @@ block content
               each comment in article.comments
                 li.comments__comment
                   .comments__avatar.avatar
-                    img(src='/img/avatar-1.png' alt='аватар пользователя')
+                    img(src=comment.users.avatar alt='аватар пользователя')
                   .comments__text
                     .comments__head
-                      p Евгений Петров •
+                      p #{comment.users.name}
                       time.comments__date #{formatDate(comment.createdAt)}
                     p.comments__message #{comment.text}
             .comments__footer.comments__footer--user

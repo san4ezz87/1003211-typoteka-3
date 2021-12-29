@@ -43,6 +43,13 @@ class API {
     });
   }
 
+  async createUser(data) {
+    return this._load(`/user`, {
+      method: HttpMethod.POST,
+      data,
+    });
+  }
+
   async editArticle(id, data) {
     return this._load(`/articles/${id}`, { method: HttpMethod.PUT, data });
   }

@@ -6,12 +6,17 @@ const Joi = require(`joi`);
 
 const ErrorCommentMessage = {
   TEXT: `Комментарий содержит меньше 20 символов`,
+  USER_ID: `Некорректный идентификатор пользователя`,
+  TEXT_EMPTY: "Пустой комментарий",
 };
 
 const schema = Joi.object({
   text: Joi.string().min(20).required().messages({
     "string.min": ErrorCommentMessage.TEXT,
-    "string.empty": "Пустой комментарий",
+    "string.empty": ErrorCommentMessage.TEXT_EMPTY,
+  }),
+  userId: Joi.number().integer().positive().required().messages({
+    "number.base": ErrorCommentMessage.USER_ID,
   }),
 });
 

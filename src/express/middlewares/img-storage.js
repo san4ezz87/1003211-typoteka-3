@@ -1,11 +1,11 @@
-'use strict';
+"use strict";
 
 const multer = require(`multer`);
 const path = require(`path`);
-const {nanoid} = require(`nanoid`);
+const { nanoid } = require(`nanoid`);
 
 const UPLOAD_DIR = `../upload/img/`;
-
+const FILE_TYPES = [`image/png`, `image/jpg`, `image/jpeg`];
 const uploadDirAbsolute = path.resolve(__dirname, UPLOAD_DIR);
 
 const storage = multer.diskStorage({
@@ -15,8 +15,17 @@ const storage = multer.diskStorage({
     const extension = file.originalname.split(`.`).pop();
 
     cb(null, `${uniqueName}.${extension}`);
-  }
+  },
 });
 
-module.exports.storage = storage;
+const fileFilter = (req, file, cb) => {
+  if (FILE_TYPES.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
 
+const upload = multer({ storage, fileFilter });
+
+module.exports = upload;
