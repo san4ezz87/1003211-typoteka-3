@@ -55,6 +55,26 @@ router.get(`/login`, (req, res) => {
   res.render(`login`);
 });
 
+router.post(`/login`, async (req, res) => {
+  const {email, password} = req.body;
+  try {
+    const user = await api.auth(email, password);
+    req.session.user = user;
+    req.session.save(() => {
+      res.redirect(`/`);
+    })
+  } catch(errors) {
+    const validationMessages = prepareErrors(errors);
+    const {user} = req.session;
+    res.render(`login`, {user, validationMessages});
+  }
+});
+
+router.get(`/logout`, (req, res) => {
+  delete req.session.user;
+  res.redirect(`/`);
+});
+
 router.get(`/search`, async (req, res) => {
   try {
     const searcedArticles = await api.search(req.query.search);
