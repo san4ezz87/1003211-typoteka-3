@@ -42,7 +42,7 @@ const getRandomSubarray = (items) => {
 
 const buildSrcset = (picturName) => {
   return srcsetList.map((pictureSize) => {
-    return `img/${picturName}${pictureSize}`;
+    return `${picturName}${pictureSize}`;
   });
 };
 

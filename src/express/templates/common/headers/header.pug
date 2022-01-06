@@ -1,0 +1,5 @@
+mixin header(user)
+  if user
+    include ./header-athoriesed.pug
+  else if !user
+    include ./header-unathoriesed.pug

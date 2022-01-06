@@ -2,7 +2,8 @@ extends layout.pug
 
 block content 
   .wrapper-color
-    include ./common/headers/header-author.pug
+    include ./common/headers/header.pug
+    +header(user)
     main
       section.search-page
         .search-page__wrapper

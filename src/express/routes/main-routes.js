@@ -11,6 +11,8 @@ const router = new express.Router();
 const OFFERS_PER_PAGE = 8;
 
 router.get(`/`, async (req, res) => {
+  const {user} = req.session;
+
   let { page = 1 } = req.query;
   page = +page;
   const limit = OFFERS_PER_PAGE;
@@ -24,7 +26,7 @@ router.get(`/`, async (req, res) => {
 
   const totalPages = Math.ceil(count / OFFERS_PER_PAGE);
 
-  res.render(`main`, { page, totalPages, articles, categories });
+  res.render(`main`, { page, totalPages, articles, categories, user });
 });
 
 router.get(`/register`, (req, res) => {
@@ -76,11 +78,12 @@ router.get(`/logout`, (req, res) => {
 });
 
 router.get(`/search`, async (req, res) => {
+  const {user} = req.session;
   try {
     const searcedArticles = await api.search(req.query.search);
-    res.render(`search`, { searcedArticles });
+    res.render(`search`, { searcedArticles, user });
   } catch (err) {
-    res.render(`search`, { searcedArticles: null });
+    res.render(`search`, { searcedArticles: null, user });
   }
 });
 

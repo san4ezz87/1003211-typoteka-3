@@ -57,9 +57,7 @@ class API {
   async createComment(id, data) {
     return this._load(`articles/${id}/comments`, {
       method: HttpMethod.POST,
-      data: {
-        text: data,
-      },
+      data,
     });
   }
 

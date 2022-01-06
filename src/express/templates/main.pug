@@ -2,7 +2,8 @@ extends layout.pug
 
 block content
   .wrapper
-    include ./common/headers/header-unathoriesed.pug
+    include ./common/headers/header.pug
+    +header(user)
     main.main-page
       h1.visually-hidden Главная страница личного блога Типотека
       p.

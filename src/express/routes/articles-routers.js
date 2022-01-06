@@ -22,22 +22,24 @@ router.get(`/category/:id`, (req, res) => {
 });
 
 router.get(`/add`, async (req, res) => {
+  const {user} = req.session;
   const categories = await api.getCategories();
 
-  res.render(`admin-add-new-post-empty`, { categories });
+  res.render(`admin-add-new-post-empty`, { categories, user });
 });
 
 router.post(`/add`, upload.single(`upload`), async (req, res) => {
   const { body, file } = req;
+  const {user} = req.session;
 
   const article = {
+    user: user.email,
+    userId: user.id,
     title: body.title,
     announce: body.announce,
     fullText: body.fullText,
     categories: ensureArray(body.categories || ""),
-    img: {
-      src: (file && file.filename) || "",
-    },
+    picture: (file && file.filename) || "",
   };
 
   try {
@@ -103,22 +105,25 @@ router.post(`/edit/:id`, upload.single(`upload`), async (req, res) => {
 
 router.get(`/:id`, async (req, res) => {
   const { id } = req.params;
-  const article = await api.getArticle(id, { comments: true });
+  const {user} = req.session;
 
-  res.render(`article`, { article });
+  const article = await api.getArticle(id, { comments: true });
+    
+  res.render(`article`, { article, user });
 });
 
 router.post(`/:id/comments`, async (req, res) => {
   const { id } = req.params;
   const { comment } = req.body;
+  const {user} = req.session;
 
   try {
-    await api.createComment(id, comment);
+    await api.createComment(id, {text: comment, userId: user.id});
     res.redirect(`/articles/${id}`);
   } catch (errors) {
     const article = await api.getArticle(id, { comments: true });
     const validationMessages = prepareErrors(errors);
-    res.render(`article`, { article, comment, validationMessages });
+    res.render(`article`, { article, comment, user, validationMessages });
   }
 });
 
