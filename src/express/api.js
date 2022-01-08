@@ -57,10 +57,15 @@ class API {
   async createComment(id, data) {
     return this._load(`articles/${id}/comments`, {
       method: HttpMethod.POST,
-      data: {
-        text: data,
-      },
+      data,
     });
+  }
+
+  async auth(email, password) {
+    return this._load(`/user/auth`, {
+      method: HttpMethod.POST,
+      data: {email, password}
+    })
   }
 }
 

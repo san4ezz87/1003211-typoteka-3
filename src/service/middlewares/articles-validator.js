@@ -38,7 +38,7 @@ const schema = Joi.object({
     "string.max": ErrorOfferMessage.FULL_TEXT_MAX,
     "string.empty": ErrorOfferMessage.FULL_TEXT_EMPTY,
   }),
-  img: Joi.any(),
+  picture: Joi.any(),
   user: Joi.string().email().required().messages({
     "string.email": ErrorOfferMessage.EMAIL,
   }),

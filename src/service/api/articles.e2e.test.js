@@ -249,6 +249,20 @@ describe(`API returns an article with given id`, () => {
     expect(response.body.title).toBe(`Как собрать камни бесконечности`));
 });
 
+describe(`API returns an article with given id and comments`, () => {
+  let app;
+  let response;
+
+  beforeAll(async () => {
+    app = await createAPI();
+    response = await request(app).get(`/articles/1`);
+  });
+
+  test(`Status code 200`, () => expect(response.statusCode).toBe(HttpCode.OK));
+  test(`Article's title is "Как собрать камни бесконечности"`, () =>
+    expect(response.body.title).toBe(`Как собрать камни бесконечности`));
+});
+
 describe(`API creates an article if data is valid`, () => {
   const newArticle = {
     userId: 1,

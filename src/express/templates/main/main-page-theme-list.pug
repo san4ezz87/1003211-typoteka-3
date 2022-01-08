@@ -57,7 +57,7 @@ section.main-page__list.preview
               a.preview__breadcrumbs-link(href='#') #{category.name}
         if article.picture
           .preview__background
-            img.preview__background-image(src=article.picture width='460' height='240')
+            img.preview__background-image(src='/img/' + article.picture width='460' height='240')
         time.preview__time(datetime='2019-03-21T20:33') #{article.createdDate}
         h3.preview__name
           a.preview__name-link(href='/articles/' + article.id) #{article.title}
